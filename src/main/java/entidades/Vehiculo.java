@@ -11,8 +11,12 @@ import javax.persistence.*;
 // En este caso, su nombre
 @Table(name="vehiculo")
 
-// @NamedQuery, sirve para indicar consultas a nivel de clase identificables por un nombre
-@NamedQuery(name="Vehiculo.findAll", query="SELECT v FROM Vehiculo v")
+// @NamedQuery, sirve para indicar consultas identificables por un nombre
+@NamedQueries({
+	@NamedQuery(name="Vehiculo.findAll", query="SELECT v FROM Vehiculo v"),
+	@NamedQuery(name = "Vehiculo.findMatricula", query = "SELECT v FROM Vehiculo v WHERE v.matricula = :matricula"),
+})
+
 
 public class Vehiculo implements Serializable {
 	private static final long serialVersionUID = 1L;
