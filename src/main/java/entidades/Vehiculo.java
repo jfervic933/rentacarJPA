@@ -3,18 +3,25 @@ package entidades;
 import java.io.Serializable;
 import javax.persistence.*;
 
-
-/**
- * The persistent class for the vehiculo database table.
- * 
- */
+// @Entity, Indica que la clase es una entidad que se va a mapear con una tabla 
+// Los campos de la clase se mapearán con columnas de la tabla
 @Entity
+
+// @Table, sirve para indicar características del esquema de la tabla
+// En este caso, su nombre
 @Table(name="vehiculo")
+
+// @NamedQuery, sirve para indicar consultas a nivel de clase identificables por un nombre
 @NamedQuery(name="Vehiculo.findAll", query="SELECT v FROM Vehiculo v")
+
 public class Vehiculo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	// @Id, indica el atributo que va a mapear con la clave primaria de la tabla
 	@Id
+	// @GeneratedValue, indica que este valor se genera automáticamente cuando la entidad
+	// se guarde en la tabla. En este caso IDENTITY se basa en una columna con incremento automático 
+	// y permite que la base de datos genere un nuevo valor con cada operación de inserción
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 
