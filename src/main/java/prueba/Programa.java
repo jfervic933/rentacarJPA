@@ -28,6 +28,16 @@ public class Programa {
 		for (Vehiculo v : listaVehiculos) {
 			System.out.println(v);
 		}
+		
+		// Se crea la Query a partir del nombre de la NamedQuery de la clase Vehiculo
+		q = em.createNamedQuery("Vehiculo.findMatricula");
+		// Se establece el parámetro de la consulta
+		q.setParameter("matricula","0034AAB");
+		// Se ejecuta la consulta
+		Vehiculo v = (Vehiculo) q.getSingleResult();
+		
+		System.out.println("Vehiculo de matrícula 0034AAB ------------ ");
+		System.out.println(v);
 
 		// Se cierra el objeto EntityManager
 		em.close(); 
