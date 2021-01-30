@@ -13,35 +13,50 @@ public class Programa {
 
 	public static void main(String[] args) {
 
-		// EntityManager permite realizar operaciones con la BD, lo obtenemos a
-		// Se obtiene a través del EntityManagerFactory y este a su vez se genera 
-		// a partir del nombre de la unidad de persistencia (fichero persistence.xml)
-		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("rentacar");
-		EntityManager em = entityManagerFactory.createEntityManager();
+		// Se obtienen todas las intancias
+		List<Vehiculo> listaVehiculos = findAll();
 
+		// Se imprime la lista
+		for (Vehiculo v : listaVehiculos) {
+			System.out.println(v);
+		}
+
+		// Se obtiene una entidad
+		System.out.println("Buscar Vehiculo de matrícula 0034AAB ------------ ");
+		Vehiculo v = findByMatricula("0034AAB");
+		System.out.println(v);
+
+	}
+
+	public static List<Vehiculo> findAll() {
+		EntityManager em = getEntityManager();
 		// Se crea la Query a partir del nombre de la NamedQuery de la clase Vehiculo
 		Query q = em.createNamedQuery("Vehiculo.findAll");
 		// Se ejecuta la consulta con getResultList haciendo un casting
 		List<Vehiculo> listaVehiculos = (List<Vehiculo>) q.getResultList();
+		em.close();
+		return listaVehiculos;
+	}
 
-		// Se imprime la lista 
-		for (Vehiculo v : listaVehiculos) {
-			System.out.println(v);
-		}
-		
+	public static Vehiculo findByMatricula(String matricula) {
+		EntityManager em = getEntityManager();
 		// Se crea la Query a partir del nombre de la NamedQuery de la clase Vehiculo
-		q = em.createNamedQuery("Vehiculo.findMatricula");
+		Query q = em.createNamedQuery("Vehiculo.findMatricula");
 		// Se establece el parámetro de la consulta
-		q.setParameter("matricula","0034AAB");
+		q.setParameter("matricula", matricula);
 		// Se ejecuta la consulta
 		Vehiculo v = (Vehiculo) q.getSingleResult();
-		
-		System.out.println("Vehiculo de matrícula 0034AAB ------------ ");
-		System.out.println(v);
+		em.close();
+		return v;
+	}
 
-		// Se cierra el objeto EntityManager
-		em.close(); 
-
+	private static EntityManager getEntityManager() {
+		// EntityManager permite realizar operaciones con la BD, lo obtenemos a
+		// Se obtiene a través del EntityManagerFactory y este a su vez se genera
+		// a partir del nombre de la unidad de persistencia (fichero persistence.xml)
+		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("rentacar");
+		EntityManager em = entityManagerFactory.createEntityManager();
+		return em;
 	}
 
 }
