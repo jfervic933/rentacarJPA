@@ -96,4 +96,25 @@ public class Vehiculo implements Serializable {
 		this.precio = precio;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Vehiculo [id=");
+		builder.append(id);
+		builder.append(", bastidor=");
+		builder.append(bastidor);
+		builder.append(", disponible=");
+		builder.append(disponible);
+		builder.append(", marca=");
+		builder.append(marca);
+		builder.append(", matricula=");
+		builder.append(matricula);
+		builder.append(", modelo=");
+		builder.append(modelo);
+		builder.append(", precio=");
+		builder.append(precio);
+		builder.append("]");
+		return builder.toString();
+	}
+
 }
