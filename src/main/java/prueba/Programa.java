@@ -13,19 +13,48 @@ public class Programa {
 
 	public static void main(String[] args) {
 
-		// Se obtienen todas las intancias
+		// Se obtienen todas las instancias
 		List<Vehiculo> listaVehiculos = findAll();
 
 		// Se imprime la lista
+		System.out.println("Todas las entidades ------------ ");
 		for (Vehiculo v : listaVehiculos) {
 			System.out.println(v);
 		}
 
 		// Se obtiene una entidad
 		System.out.println("Buscar Vehiculo de matrícula 0034AAB ------------ ");
-		Vehiculo v = findByMatricula("0034AAB");
-		System.out.println(v);
+		Vehiculo aux = findByMatricula("0034AAB");
+		System.out.println(aux);
 
+		// Creación de una entidad
+		Vehiculo v = new Vehiculo();
+		v.setBastidor("6634543Z01");
+		v.setMatricula("0998FRR");
+		v.setDisponible(true);
+		v.setMarca("Renault");
+		v.setModelo("Clio");
+		v.setPrecio(14.00);
+		createVehiculo(v);
+
+		// Se obtienen todas las instancias
+		listaVehiculos = findAll();
+		System.out.println("Todas las entidades ------------ ");
+		listaVehiculos.forEach(System.out::println);
+
+	}
+
+	public static void createVehiculo(Vehiculo v) {
+		EntityManager em = getEntityManager();
+		// En este caso es necesario iniciar una transacción en la base de datos
+		// porque vamos a persistir información en la misma
+		em.getTransaction().begin();
+		// Se guarda el objeto en el contexto de persistencia (caché intermedia)
+		em.persist(v);
+		// Se vuelca la información del contexto (caché intermedia) en la base de datos
+		em.getTransaction().commit();
+		// Cierra el entityManager
+		em.close();
 	}
 
 	public static List<Vehiculo> findAll() {
