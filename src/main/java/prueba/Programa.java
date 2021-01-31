@@ -35,27 +35,54 @@ public class Programa {
 		v.setMarca("Renault");
 		v.setModelo("Clio");
 		v.setPrecio(14.00);
-		// createVehiculo(v); // Si está creada lanzará una excepción
+		createVehiculo(v); // Si está creada lanzará una excepción
 
 		// Se obtienen todas las instancias
 		listaVehiculos = findAll();
-		System.out.println("Todas las entidades ------------ ");
+		System.out.println("Todas las entidades después de crear una ------------ ");
 		listaVehiculos.forEach(System.out::println);
 
 		// Se modifica el precio del vehículo id = 1
-		Vehiculo nuevo = findByPK(1);
-		if (nuevo!=null) {
-			nuevo.setPrecio(134);
-			System.out.println("Nuevo " + nuevo);
-			modifyVehiculo(nuevo);
+		Vehiculo vehicModificar = findByPK(1);
+		if (vehicModificar != null) {
+			vehicModificar.setPrecio(134);
+			modifyVehiculo(vehicModificar);
 		}
-		
 
 		// Se obtienen todas las instancias
 		listaVehiculos = findAll();
-		System.out.println("Todas las entidades ------------ ");
+		System.out.println("Todas las entidades después de modificar una ------------ ");
 		listaVehiculos.forEach(System.out::println);
 
+		// Borrado del vehículo de matrícula 1235ACB
+		Vehiculo vehicBorrar = findByMatricula("1235ACB");
+		borrarVehiculo(vehicBorrar);
+
+		// Se obtienen todas las instancias
+		listaVehiculos = findAll();
+		System.out.println("Todas las entidades después de borrar una ------------ ");
+		listaVehiculos.forEach(System.out::println);
+
+	}
+
+	public static void borrarVehiculo(Vehiculo v) {
+		EntityManager em = getEntityManager();
+		Vehiculo aux = null;
+		// En este caso es necesario iniciar una transacción en la base de datos
+		// porque vamos a borrar información en la misma
+		em.getTransaction().begin();
+		// Si v no es un objeto gestionado por el contexto de persistencia
+		if (!em.contains(v)) {
+			// Carga v en el contexto de persistencia y se guarda en aux
+			aux = em.merge(v);
+		}
+		// Ahora se puede borrar usando aux, porque es una entidad gestionada por la
+		// caché
+		em.remove(aux);
+		// Se vuelca la información del contexto (caché intermedia) en la base de datos
+		em.getTransaction().commit();
+		// Cierra el entityManager
+		em.close();
 	}
 
 	public static void modifyVehiculo(Vehiculo v) {
@@ -64,7 +91,8 @@ public class Programa {
 		// porque vamos a persistir información en la misma
 		em.getTransaction().begin();
 		// merge(Objeto) - Si una entidad con el mismo identificador que v existe en el
-		// contexto de persistencia (caché), se actualizan sus atributos y se devuelve como
+		// contexto de persistencia (caché), se actualizan sus atributos y se devuelve
+		// como
 		// entidad gestionada
 		// Si el objeto v no existe en la base de datos, se comporta como persist() y la
 		// entidad gestionada es la devuelta por merge()
@@ -95,9 +123,9 @@ public class Programa {
 		q.setParameter(1, pk);
 		aux = (Vehiculo) q.getSingleResult();
 		return aux;
-		
+
 	}
-	
+
 	public static List<Vehiculo> findAll() {
 		EntityManager em = getEntityManager();
 		// Se crea la Query a partir del nombre de la NamedQuery de la clase Vehiculo
@@ -107,7 +135,7 @@ public class Programa {
 		em.close();
 		return listaVehiculos;
 	}
-	
+
 	public static Vehiculo findByMatricula(String matricula) {
 		EntityManager em = getEntityManager();
 		// Se crea la Query a partir del nombre de la NamedQuery de la clase Vehiculo
@@ -119,7 +147,6 @@ public class Programa {
 		em.close();
 		return v;
 	}
-	
 
 	private static EntityManager getEntityManager() {
 		// EntityManager permite realizar operaciones con la BD, lo obtenemos a
