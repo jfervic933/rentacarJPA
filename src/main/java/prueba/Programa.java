@@ -35,12 +35,42 @@ public class Programa {
 		v.setMarca("Renault");
 		v.setModelo("Clio");
 		v.setPrecio(14.00);
-		createVehiculo(v);
+		// createVehiculo(v); // Si está creada lanzará una excepción
 
 		// Se obtienen todas las instancias
 		listaVehiculos = findAll();
 		System.out.println("Todas las entidades ------------ ");
 		listaVehiculos.forEach(System.out::println);
+
+		// Se modifica el precio del vehículo id = 1
+		Vehiculo nuevo = findByPK(1);
+		if (nuevo!=null) {
+			nuevo.setPrecio(134);
+			System.out.println("Nuevo " + nuevo);
+			modifyVehiculo(nuevo);
+		}
+		
+
+		// Se obtienen todas las instancias
+		listaVehiculos = findAll();
+		System.out.println("Todas las entidades ------------ ");
+		listaVehiculos.forEach(System.out::println);
+
+	}
+
+	public static void modifyVehiculo(Vehiculo v) {
+		EntityManager em = getEntityManager();
+		// En este caso es necesario iniciar una transacción en la base de datos
+		// porque vamos a persistir información en la misma
+		em.getTransaction().begin();
+		// merge(Objeto) - Si una entidad con el mismo identificador que v existe en el
+		// contexto de persistencia (caché), se actualizan sus atributos y se devuelve como
+		// entidad gestionada
+		// Si el objeto v no existe en la base de datos, se comporta como persist() y la
+		// entidad gestionada es la devuelta por merge()
+		em.merge(v);
+		em.getTransaction().commit();
+		em.close();
 
 	}
 
@@ -57,6 +87,17 @@ public class Programa {
 		em.close();
 	}
 
+	public static Vehiculo findByPK(int pk) {
+		EntityManager em = getEntityManager();
+		Vehiculo aux = null;
+		// Se crea el objeto Query a partir de una SQL nativa
+		Query q = em.createNativeQuery("Select * from vehiculo where id = ?", Vehiculo.class);
+		q.setParameter(1, pk);
+		aux = (Vehiculo) q.getSingleResult();
+		return aux;
+		
+	}
+	
 	public static List<Vehiculo> findAll() {
 		EntityManager em = getEntityManager();
 		// Se crea la Query a partir del nombre de la NamedQuery de la clase Vehiculo
@@ -66,7 +107,7 @@ public class Programa {
 		em.close();
 		return listaVehiculos;
 	}
-
+	
 	public static Vehiculo findByMatricula(String matricula) {
 		EntityManager em = getEntityManager();
 		// Se crea la Query a partir del nombre de la NamedQuery de la clase Vehiculo
@@ -78,6 +119,7 @@ public class Programa {
 		em.close();
 		return v;
 	}
+	
 
 	private static EntityManager getEntityManager() {
 		// EntityManager permite realizar operaciones con la BD, lo obtenemos a
