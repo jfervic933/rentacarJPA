@@ -15,7 +15,7 @@ public class ControladorVehiculo {
 	private static EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("rentacar");
 	private EntityManager em;
 	private Query consulta;
-
+	
 	public void borrarVehiculo(Vehiculo v) {
 		this.em = entityManagerFactory.createEntityManager();
 		Vehiculo aux = null;
@@ -41,10 +41,9 @@ public class ControladorVehiculo {
 		this.em.getTransaction().begin();
 		// merge(Objeto) - Si una entidad con el mismo identificador que v existe en el
 		// contexto de persistencia (caché), se actualizan sus atributos y se devuelve
-		// como
-		// entidad gestionada
+		// como entidad gestionada
 		// Si el objeto v no existe en la base de datos, se comporta como persist() y la
-		// entidad gestionada es la devuelta por merge()
+		// entidad gestionada es la devuelta por merge(), por lo que v es una entidad desconectada
 		this.em.merge(v);
 		this.em.getTransaction().commit();
 		this.em.close();
@@ -57,6 +56,7 @@ public class ControladorVehiculo {
 		// porque vamos a persistir información en la misma
 		this.em.getTransaction().begin();
 		// Se guarda el objeto en el contexto de persistencia (caché intermedia)
+		// v es una entidad conectada
 		this.em.persist(v);
 		// Se vuelca la información del contexto (caché intermedia) en la base de datos
 		this.em.getTransaction().commit();
