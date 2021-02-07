@@ -9,7 +9,7 @@ public class PruebaControlador {
 
 	public static void main(String[] args) {
 		ControladorVehiculo cv = new ControladorVehiculo();
-		
+
 		// Se obtienen todas las instancias
 		List<Vehiculo> listaVehiculos = cv.findAll();
 
@@ -58,6 +58,11 @@ public class PruebaControlador {
 		// Se obtienen todas las instancias
 		listaVehiculos = cv.findAll();
 		System.out.println("Todas las entidades después de borrar una ------------ ");
+		listaVehiculos.forEach(System.out::println);
+
+		// Se obtienen todas las instancias de la marca Seat
+		listaVehiculos = cv.findByMarca("Seat");
+		System.out.println("Todas las entidades Seat ------------ ");
 		listaVehiculos.forEach(System.out::println);
 
 	}

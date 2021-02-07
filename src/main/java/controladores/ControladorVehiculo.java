@@ -10,12 +10,12 @@ import javax.persistence.Query;
 import entidades.Vehiculo;
 
 public class ControladorVehiculo {
-	
-	// Factoria para obtener objetos EntityManager 
+
+	// Factoria para obtener objetos EntityManager
 	private static EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("rentacar");
 	private EntityManager em;
 	private Query consulta;
-		
+
 	public void borrarVehiculo(Vehiculo v) {
 		this.em = entityManagerFactory.createEntityManager();
 		Vehiculo aux = null;
@@ -84,7 +84,7 @@ public class ControladorVehiculo {
 		this.em.close();
 		return v;
 	}
-	
+
 	public List<Vehiculo> findAll() {
 		this.em = entityManagerFactory.createEntityManager();
 		this.consulta = em.createNamedQuery("Vehiculo.findAll");
@@ -92,5 +92,16 @@ public class ControladorVehiculo {
 		this.em.close();
 		return listaVehiculos;
 	}
-	
+
+	// En este caso se va a utilizar una nativeQuery, que permite pasar código
+	// SQL directamente a la base de datos
+	public List<Vehiculo> findByMarca(String marca) {
+		this.em = entityManagerFactory.createEntityManager();
+		this.consulta = em.createNativeQuery("Select * from vehiculo where marca=?", Vehiculo.class);
+		this.consulta.setParameter(1, marca);
+		List<Vehiculo> listaVehiculos = (List<Vehiculo>) consulta.getResultList();
+		this.em.close();
+		return listaVehiculos;
+	}
+
 }
